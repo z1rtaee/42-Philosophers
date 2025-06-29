@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 20:12:25 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/06/26 22:44:57 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/06/29 16:55:09 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	*philo_routine(void *thread)
 
 	philo = (t_philo *)thread;
 	if (philo->id % 2 == 0)
-		usleep(100);
+		usleep(philo->data->time_to_eat * 1000);
 	while (!simulation_end(philo))
 	{
 		if (philo->data->philos_nbr == 1)
@@ -78,6 +78,7 @@ void	*philo_routine(void *thread)
 		print_action(philo, "is sleeping");
 		sleep_ms(philo->data->time_to_sleep);
 		print_action(philo, "is thinking");
+		usleep(100);
 	}
 	return (NULL);
 }
