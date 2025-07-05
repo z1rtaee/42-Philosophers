@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 19:41:10 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/06/26 20:09:52 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/05 20:12:39 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,7 @@ int	init_mutexes(t_data *data)
 	i = 0;
 	if (pthread_mutex_init(&data->death_lock, NULL))
 		return (0);
-	if (pthread_mutex_init(&data->print_lock, NULL))
-		return (0);
-	while (i <data->philos_nbr)
+	while (i < data->philos_nbr)
 	{
 		if (pthread_mutex_init(&data->forks[i], NULL))
 			return (0);

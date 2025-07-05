@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/05 20:12:47 by bpires-r          #+#    #+#             */
+/*   Updated: 2025/07/05 20:14:20 by bpires-r         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -8,12 +20,11 @@
 # include <limits.h>
 # include <sys/time.h>
 
-
 # define ERROR_ARG_NBR "Error: Wrong number of arguments.\n"
 # define ERROR_INV_ARG "Error: Invalid arguments.\n"
 # define ERROR_INIT "Error: failed to initialize data\n"
 
-typedef struct s_data t_data;
+typedef struct s_data	t_data;
 
 typedef struct s_philo
 {
@@ -24,19 +35,18 @@ typedef struct s_philo
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	t_data			*data;
-}				t_philo;
+}						t_philo;
 
 typedef struct s_data
 {
-	int			philos_nbr;
-	int			time_to_die; //max time a philo can go without eating
-	int			time_to_eat; //how long a philo takes to eat
-	int			time_to_sleep; //how long they sleep after eat
-	int			max_meals;
-	int			stop;
-	long		start_time;
+	int				philos_nbr;
+	int				time_to_die; //max time a philo can go without eating
+	int				time_to_eat; //how long a philo takes to eat
+	int				time_to_sleep; //how long they sleep after eat
+	int				max_meals;
+	int				stop;
+	long			start_time;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
 	t_philo			*philos;
 }				t_data;
@@ -52,12 +62,12 @@ void	*philo_routine(void *thread);
 int		create_threads(t_data *data);
 int		join_threads(t_data *data);
 void	*monitor_routine(void *arg);
-
+void	check_death(t_data *data);
 
 //Mutex Management
 void	lock_forks(t_philo *philo);
 void	unlock_forks(t_philo *philo);
-void	barriguinha_cheia(t_philo *philo); 
+void	barriguinha_cheia(t_philo *philo);
 
 //Utils
 long	ft_atol(char *s);

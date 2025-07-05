@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 20:12:25 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/06/30 14:53:57 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/05 19:48:43 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	create_threads(t_data *data)
 	while (i < data->philos_nbr)
 	{
 		data->philos[i].last_meal = data->start_time;
-		if (pthread_create(&data->philos[i].thread, NULL, philo_routine, &data->philos[i]))
+		if (pthread_create(&data->philos[i].thread, NULL,
+				philo_routine, &data->philos[i]))
 			return (0);
 		i++;
 	}
@@ -69,8 +70,7 @@ void	*philo_routine(void *thread)
 			sleep_ms(philo->data->time_to_die);
 			print_action(philo, "died");
 			pthread_mutex_unlock(philo->left_fork);
-			philo->data->stop = 1;
-			return (NULL);
+			return (philo->data->stop = 1, NULL);
 		}
 		lock_forks(philo);
 		barriguinha_cheia(philo);
