@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit_error.c                                       :+:      :+:    :+:   */
+/*   free_exit_error.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 21:08:55 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/06/26 21:09:01 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/06/30 16:39:02 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	destroy_mutexes(t_data *data)
 
 	i = 0;
 	pthread_mutex_destroy(&data->print_lock);
-	pthread_mutex_destroy(&data->print_lock);
+	pthread_mutex_destroy(&data->death_lock);
 	while (i < data->philos_nbr)
 		pthread_mutex_destroy(&data->forks[i++]);
 }

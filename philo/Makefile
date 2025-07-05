@@ -8,7 +8,7 @@ DEFAULT = \e[0m
 NAME			= philo
 
 CC				= cc
-CFLAGS			= -Wall -Wextra -Werror -g
+CFLAGS			= -Wall -Wextra -Werror -g #-fsanitize=address
 INCLUDE			= -I inc/
 
 ### MINISHELL SRCS ###

@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 21:56:22 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/06/26 22:40:23 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/05 19:21:31 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,28 @@ void	*monitor_routine(void *arg)
 	data = (t_data *)arg;
 	while (1)
 	{
-		if (data->max_meals > 0 && all_philos_full(data))
-		{
-			data->stop = 1;
-			pthread_mutex_unlock(&data->death_lock);
-			return (NULL);
-		}
 		i = 0;
 		while (i < data->philos_nbr)
 		{
 			pthread_mutex_lock(&data->death_lock);
 			if ((get_time_ms() - data->philos[i].last_meal) > data->time_to_die)
 			{
+				pthread_mutex_unlock(&data->death_lock);
 				print_action(&data->philos[i], "died");
 				data->stop = 1;
-				pthread_mutex_unlock(&data->death_lock);
-				return (NULL);
-			}
-			if (data->max_meals > 0 && all_philos_full(data))
-			{
-				data->stop = 1;
-				pthread_mutex_unlock(&data->death_lock);
 				return (NULL);
 			}
 			pthread_mutex_unlock(&data->death_lock);
 			i++;
 		}
+		pthread_mutex_lock(&data->death_lock);
+		if (data->max_meals > 0 && all_philos_full(data))
+		{
+			data->stop = 1;
+			pthread_mutex_unlock(&data->death_lock);
+			return (NULL);
+		}
+		pthread_mutex_unlock(&data->death_lock);
 		usleep(1000);
 	}
 }

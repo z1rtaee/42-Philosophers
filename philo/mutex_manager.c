@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 20:40:35 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/06/26 20:50:15 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/06/30 15:52:23 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,14 @@ void	unlock_forks(t_philo *philo)
 void	barriguinha_cheia(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->death_lock);
+	if (philo->data->stop)
+	{
+		pthread_mutex_unlock(&philo->data->death_lock);
+		return ;
+	}
 	philo->last_meal = get_time_ms();
+	philo->meals_eaten++;
 	pthread_mutex_unlock(&philo->data->death_lock);
 	print_action(philo, "is eating");
-	philo->meals_eaten++;
 	sleep_ms(philo->data->time_to_eat);
 }
