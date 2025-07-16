@@ -22,12 +22,18 @@ void	*monitor(void *arg)
 	while (1)
 	{
 		pthread_mutex_lock(&philo->death_lock);
+		if (philo->ate)
+		{
+			pthread_mutex_unlock(&philo->death_lock);
+			break ;
+		}
 		if (get_time_ms() - philo->last_meal > data->time_to_die)
 		{
 			sem_wait(data->print);
 			printf("%ld %d died\n", get_time_ms() - data->start_time, philo->id);
-			free_all(data);
 			pthread_mutex_unlock(&philo->death_lock);
+			//kill_all_philos(data);
+			free_resources(data);
 			exit(1);
 		}
 		pthread_mutex_unlock(&philo->death_lock);
@@ -36,41 +42,21 @@ void	*monitor(void *arg)
 	return (NULL);
 }
 
-void	safe_print(t_data *data, t_philo *philo, char *msg)
+void	*meal_monitor(void *arg)
 {
-	sem_wait(data->print);
-	print_action(philo, msg);
-	sem_post(data->print);
-}
+	t_data	*data;
+	int		i;
 
-void	*philo_routine(void *arg)
-{
-	t_philo		*philo;
-	t_data		*data;
-	pthread_t	monitor_thread;
-
-	philo = (t_philo *)arg;
-	data = philo->data;
-	data->start_time = get_time_ms();
-	philo->last_meal = data->start_time;
-	pthread_create(&monitor_thread, NULL, monitor, philo);
-	pthread_detach(monitor_thread);
-	while (1)
+	i = 0;
+	data = (t_data *)arg;
+	while (i < data->philos_nbr)
 	{
-		lock_forks(philo);
-		pthread_mutex_lock(&philo->death_lock);
-		philo->last_meal = get_time_ms();
-		pthread_mutex_unlock(&philo->death_lock);
-		safe_print(data, philo, "is eating");
-		pthread_mutex_lock(&philo->death_lock);
-		philo->meals_eaten++;
-		pthread_mutex_unlock(&philo->death_lock);
-		sleep_ms(data->time_to_eat);
-		unlock_forks(philo);
-		safe_print(data, philo, "is sleeping");
-		sleep_ms(data->time_to_sleep);
-		safe_print(data, philo, "is thinking");
-		usleep(100);
+		sem_wait(data->meals_count);
+		i++;
 	}
+	sem_wait(data->print);
+	printf("All philosophers have eaten %d times.\n", data->max_meals);
+	sem_post(data->print);
+	kill_all_philos(data);
 	return (NULL);
 }

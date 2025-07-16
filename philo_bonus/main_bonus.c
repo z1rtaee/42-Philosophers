@@ -15,6 +15,7 @@
 int main(int argc, char **argv)
 {
 	t_data	data;
+	pthread_t	meal_thread;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -33,6 +34,11 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	create_processes(&data);
+	if (data.max_meals > 0)
+	{
+		pthread_create(&meal_thread, NULL, meal_monitor, &data);
+		pthread_join(meal_thread, NULL);
+	}
 	wait_processes(&data);
 	free_all(&data);
 	return (0);

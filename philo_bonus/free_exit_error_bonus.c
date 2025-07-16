@@ -19,7 +19,7 @@ void	kill_all_philos(t_data *data)
 	i = 0;
 	while (i < data->philos_nbr)
 	{
-		kill(data->philos[i].pid, SIGKILL);
+		kill(data->philo_ids[i], SIGKILL);
 		i++;
 	}
 }
@@ -29,7 +29,7 @@ void	kill_error(t_data *data, char *msg)
 	int	i;
 
 	i = 0;
-	while (msg)
+	while (msg && msg[i])
 	{
 		write(2, &msg[i], 1);
 		i++;
@@ -40,16 +40,22 @@ void	kill_error(t_data *data, char *msg)
 
 void	free_all(t_data *data)
 {
+	free_resources(data);
+	sem_unlink("/forks");
+	sem_unlink("/print");
+	sem_unlink("/meals_count");
+}
+
+void	free_resources(t_data *data)
+{
 	if (data->philos)
 		free(data->philos);
-	if (data->forks != SEM_FAILED && data->forks != NULL)
-	{
+	if (data->philo_ids)
+		free(data->philo_ids);
+	if (data->forks != NULL && data->forks != SEM_FAILED)
 		sem_close(data->forks);
-		sem_unlink("/forks");
-	}
-	if (data->print != SEM_FAILED && data->print != NULL)
-	{
+	if (data->print != NULL && data->print != SEM_FAILED)
 		sem_close(data->print);
-		sem_unlink("/print");
-	}
+	if (data->meals_count != NULL && data->meals_count != SEM_FAILED)
+		sem_close(data->meals_count);
 }

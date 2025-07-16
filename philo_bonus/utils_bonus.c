@@ -12,12 +12,6 @@
 
 #include "philo_bonus.h"
 
-void	print_action(t_philo *philo, char *msg)
-{
-	printf("Current time -> %ld, Start Time -> %ld, ID -> %d\n", get_time_ms(), philo->data->start_time, philo->id);
-	printf("%ld %d %s\n", get_time_ms() - philo->data->start_time, philo->id, msg);
-}
-
 void	sleep_ms(long ms)
 {
 	usleep(ms * 1000);
@@ -29,4 +23,11 @@ long	get_time_ms(void)
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	safe_print(t_data *data, t_philo *philo, char *msg)
+{
+	sem_wait(data->print);
+	printf("%ld %d %s\n", get_time_ms() - philo->data->start_time, philo->id, msg);
+	sem_post(data->print);
 }

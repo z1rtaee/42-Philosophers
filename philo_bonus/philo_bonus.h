@@ -34,6 +34,7 @@ typedef struct s_data	t_data;
 typedef struct s_philo 
 {
 	int				id;
+	int				ate;
 	int				meals_eaten;
 	long			last_meal;
 	pid_t			pid;
@@ -53,6 +54,7 @@ typedef struct s_data
 	pid_t			*philo_ids;
 	sem_t			*forks;
 	sem_t			*print;
+	sem_t			*meals_count;
 	t_philo			*philos;
 }				t_data;
 
@@ -69,9 +71,11 @@ int	check_args(char **argv);
 void	kill_all_philos(t_data *data);
 void	kill_error(t_data *data, char *msg);
 void	free_all(t_data *data);
+void	free_resources(t_data *data);
 
 //philo
 void	*monitor(void *arg);
+void	*meal_monitor(void *arg);
 void	*philo_routine(void *arg);
 void	create_processes(t_data *data);
 void	wait_processes(t_data *data);
@@ -79,7 +83,6 @@ void	lock_forks(t_philo *philo);
 void	unlock_forks(t_philo *philo);
 
 //utils
-void	print_action(t_philo *philo, char *msg);
 void	safe_print(t_data *data, t_philo *philo, char *msg);
 void	sleep_ms(long ms);
 long	get_time_ms(void);
