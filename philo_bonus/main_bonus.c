@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:59:03 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/09 23:04:09 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/15 20:35:59 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,26 @@
 
 int main(int argc, char **argv)
 {
-    t_data  data;
+	t_data	data;
 
 	if (argc < 5 || argc > 6)
-		return (error_arg_nbr());
+	{
+		printf(ERROR_ARG_NBR);
+		return (1);
+	}
 	if (!check_args(argv))
-		return (error_inv_arg());
-	if (!init_data(&data, argv) || !init_mutexes(&data)
-		|| !init_philos(&data) || !create_threads(&data))
-		return (error_init_failed());
-    start_simulation(&data);
-    free_all(&data);
-    return (0);
+	{
+		printf(ERROR_INV_ARG);
+		return (1);
+	}
+	if (!init_data(&data, argv) || !init_philos(&data)
+		|| !init_semaphores(&data))
+	{
+		printf(ERROR_INIT); 
+		return (1);
+	}
+	create_processes(&data);
+	wait_processes(&data);
+	free_all(&data);
+	return (0);
 }

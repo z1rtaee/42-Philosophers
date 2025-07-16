@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:27:51 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/09 23:13:46 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/15 20:16:27 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ typedef struct s_data	t_data;
 
 typedef struct s_philo 
 {
-	int		id;
-	int		meals_eaten;
-	long	last_meal;
-	pid_t	pid;
+	int				id;
+	int				meals_eaten;
+	long			last_meal;
+	pid_t			pid;
+	pthread_mutex_t	death_lock;
 	t_data	*data;
 }				t_philo;
 
@@ -51,7 +52,37 @@ typedef struct s_data
 	long			start_time;
 	pid_t			*philo_ids;
 	sem_t			*forks;
+	sem_t			*print;
 	t_philo			*philos;
 }				t_data;
+
+//inits
+int init_data(t_data *data, char **argv);
+int	init_philos(t_data *data);
+int	init_semaphores(t_data *data);
+
+//parser
+int	is_valid_nbr(char *s);
+int	check_args(char **argv);
+
+//free_exit_error
+void	kill_all_philos(t_data *data);
+void	kill_error(t_data *data, char *msg);
+void	free_all(t_data *data);
+
+//philo
+void	*monitor(void *arg);
+void	*philo_routine(void *arg);
+void	create_processes(t_data *data);
+void	wait_processes(t_data *data);
+void	lock_forks(t_philo *philo);
+void	unlock_forks(t_philo *philo);
+
+//utils
+void	print_action(t_philo *philo, char *msg);
+void	safe_print(t_data *data, t_philo *philo, char *msg);
+void	sleep_ms(long ms);
+long	get_time_ms(void);
+long	ft_atol(char *s);
 
 #endif

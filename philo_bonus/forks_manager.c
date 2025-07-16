@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_bonus.c                                      :+:      :+:    :+:   */
+/*   forks_manager.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/09 23:01:38 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/16 16:50:31 by bpires-r         ###   ########.fr       */
+/*   Created: 2025/07/12 18:33:50 by bpires-r          #+#    #+#             */
+/*   Updated: 2025/07/16 16:56:46 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	print_action(t_philo *philo, char *msg)
+void	lock_forks(t_philo *philo)
 {
-	printf("Current time -> %ld, Start Time -> %ld, ID -> %d\n", get_time_ms(), philo->data->start_time, philo->id);
-	printf("%ld %d %s\n", get_time_ms() - philo->data->start_time, philo->id, msg);
+	sem_wait(philo->data->forks);
+	safe_print(philo->data, philo, "has taken a fork");
+	sem_wait(philo->data->forks);
+	safe_print(philo->data, philo, "has taken a fork");
 }
 
-void	sleep_ms(long ms)
+void	unlock_forks(t_philo *philo)
 {
-	usleep(ms * 1000);
-}
-
-long	get_time_ms(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	sem_post(philo->data->forks);
+	sem_post(philo->data->forks);
 }

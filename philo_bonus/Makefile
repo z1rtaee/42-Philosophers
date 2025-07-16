@@ -12,7 +12,7 @@ CFLAGS			= -Wall -Wextra -Werror -g #-fsanitize=address
 INCLUDE			= -I inc/
 
 ### MINISHELL SRCS ###
-SRCS	 		= 
+SRCS	 		= free_exit_error_bonus.c init_bonus.c main_bonus.c monitor_bonus.c parser_bonus.c philo_bonus.c utils_bonus.c forks_manager.c
 SRC_PATH		= src/
 
 TOTAL_SRCS		= $(words $(SRCS))
