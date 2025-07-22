@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:27:51 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/15 20:16:27 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:36:29 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_data
 	sem_t			*forks;
 	sem_t			*print;
 	sem_t			*meals_count;
+	sem_t			*killer;
 	t_philo			*philos;
 }				t_data;
 
@@ -76,6 +77,7 @@ void	free_resources(t_data *data);
 //philo
 void	*monitor(void *arg);
 void	*meal_monitor(void *arg);
+void	*philo_killer(void *arg);
 void	*philo_routine(void *arg);
 void	create_processes(t_data *data);
 void	wait_processes(t_data *data);

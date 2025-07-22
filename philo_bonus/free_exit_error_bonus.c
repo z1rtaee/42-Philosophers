@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 23:21:30 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/15 19:44:50 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:39:16 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	free_all(t_data *data)
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/meals_count");
+	sem_unlink("/killer");
 }
 
 void	free_resources(t_data *data)
@@ -58,4 +59,6 @@ void	free_resources(t_data *data)
 		sem_close(data->print);
 	if (data->meals_count != NULL && data->meals_count != SEM_FAILED)
 		sem_close(data->meals_count);
+	if (data->killer != NULL && data->killer != SEM_FAILED)
+		sem_close(data->killer);
 }

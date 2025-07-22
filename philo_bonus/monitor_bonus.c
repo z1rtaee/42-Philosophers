@@ -33,8 +33,10 @@ void	*monitor(void *arg)
 			printf("%ld %d died\n", get_time_ms() - data->start_time, philo->id);
 			pthread_mutex_unlock(&philo->death_lock);
 			//kill_all_philos(data);
-			free_resources(data);
-			exit(1);
+			//free_resources(data);
+			//exit(1);
+			sem_post(data->killer);
+			return (NULL);
 		}
 		pthread_mutex_unlock(&philo->death_lock);
 		usleep(1000);
@@ -51,12 +53,29 @@ void	*meal_monitor(void *arg)
 	data = (t_data *)arg;
 	while (i < data->philos_nbr)
 	{
+		if (data->stop)
+			return (NULL);
 		sem_wait(data->meals_count);
 		i++;
 	}
 	sem_wait(data->print);
 	printf("All philosophers have eaten %d times.\n", data->max_meals);
 	sem_post(data->print);
+	//kill_all_philos(data);
+	return (NULL);
+}
+
+void	*philo_killer(void *arg)
+{
+	t_data	*data;
+
+	data = (t_data *)arg;
+	sem_wait(data->killer);
+	if (data->max_meals > 0)
+	{
+		data->stop = 1;
+		sem_post(data->meals_count);
+	}
 	kill_all_philos(data);
 	return (NULL);
 }

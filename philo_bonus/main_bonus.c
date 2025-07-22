@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 22:59:03 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/15 20:35:59 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:48:41 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int main(int argc, char **argv)
 {
 	t_data	data;
 	pthread_t	meal_thread;
+	pthread_t	death_thread;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -37,8 +38,10 @@ int main(int argc, char **argv)
 	if (data.max_meals > 0)
 	{
 		pthread_create(&meal_thread, NULL, meal_monitor, &data);
-		pthread_join(meal_thread, NULL);
+		pthread_detach(meal_thread);
 	}
+	pthread_create(&death_thread, NULL, philo_killer, &data);
+	pthread_detach(death_thread);
 	wait_processes(&data);
 	free_all(&data);
 	return (0);

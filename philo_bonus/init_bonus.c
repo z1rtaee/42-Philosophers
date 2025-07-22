@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 23:04:32 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/16 16:35:51 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:35:42 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,13 @@ int	init_semaphores(t_data *data)
 	sem_unlink("/forks");
 	sem_unlink("/print");
 	sem_unlink("/meals_count");
+	sem_unlink("/killer");
 	data->forks = sem_open("/forks", O_CREAT, 0644, data->philos_nbr);
 	data->print = sem_open("/print", O_CREAT, 0644, 1);
 	data->meals_count = sem_open("/meals_count", O_CREAT, 0644, 0);
+	data->killer = sem_open("/killer", O_CREAT, 0644, 0);
 	if (data->forks == SEM_FAILED || data->print == SEM_FAILED
-		|| data->meals_count == SEM_FAILED)
+		|| data->meals_count == SEM_FAILED || data->killer == SEM_FAILED)
 		return (0);
 	return (1);
 }
