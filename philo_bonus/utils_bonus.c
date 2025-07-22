@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 23:01:38 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/16 16:50:31 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 18:50:24 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ long	get_time_ms(void)
 void	safe_print(t_data *data, t_philo *philo, char *msg)
 {
 	sem_wait(data->print);
-	printf("%ld %d %s\n", get_time_ms() - philo->data->start_time, philo->id, msg);
+	printf("%ld %d %s\n",
+		get_time_ms() - philo->data->start_time, philo->id, msg);
 	sem_post(data->print);
 }

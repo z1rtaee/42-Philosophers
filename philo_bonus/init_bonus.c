@@ -6,13 +6,13 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 23:04:32 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/22 17:35:42 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 18:47:57 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-int init_data(t_data *data, char **argv)
+int	init_data(t_data *data, char **argv)
 {
 	data->philos_nbr = ft_atol(argv[1]);
 	data->time_to_die = (int)ft_atol(argv[2]);
@@ -46,7 +46,6 @@ int	init_philos(t_data *data)
 		data->philos[i].data = data;
 		data->philos[i].ate = 0;
 		i++;
-
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 18:27:51 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/22 17:36:29 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 18:46:12 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 
 typedef struct s_data	t_data;
 
-typedef struct s_philo 
+typedef struct s_philo
 {
 	int				id;
 	int				ate;
@@ -39,10 +39,10 @@ typedef struct s_philo
 	long			last_meal;
 	pid_t			pid;
 	pthread_mutex_t	death_lock;
-	t_data	*data;
+	t_data			*data;
 }				t_philo;
 
-typedef struct s_data 
+typedef struct s_data
 {
 	int				philos_nbr;
 	int				time_to_die;
@@ -60,13 +60,14 @@ typedef struct s_data
 }				t_data;
 
 //inits
-int init_data(t_data *data, char **argv);
-int	init_philos(t_data *data);
-int	init_semaphores(t_data *data);
+int		init_data(t_data *data, char **argv);
+int		init_philos(t_data *data);
+int		init_semaphores(t_data *data);
 
 //parser
-int	is_valid_nbr(char *s);
-int	check_args(char **argv);
+int		is_valid_nbr(char *s);
+int		check_args(char **argv);
+int		parser_bonus(t_data *data, char **argv, int argc);
 
 //free_exit_error
 void	kill_all_philos(t_data *data);

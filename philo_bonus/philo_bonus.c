@@ -6,27 +6,14 @@
 /*   By: bpires-r <bpires-r@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 15:05:25 by bpires-r          #+#    #+#             */
-/*   Updated: 2025/07/12 18:06:01 by bpires-r         ###   ########.fr       */
+/*   Updated: 2025/07/22 18:53:33 by bpires-r         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-
-void	*philo_routine(void *arg)
+static void	routine_loop(t_philo *philo, t_data *data)
 {
-	t_philo		*philo;
-	t_data		*data;
-	pthread_t	monitor_thread;
-
-	philo = (t_philo *)arg;
-	data = philo->data;
-	data->start_time = get_time_ms();
-	philo->last_meal = data->start_time;
-	pthread_create(&monitor_thread, NULL, monitor, philo);
-	pthread_detach(monitor_thread);
-	if (philo->id % 2)
-		usleep(100);
 	while (1)
 	{
 		lock_forks(philo);
@@ -42,7 +29,6 @@ void	*philo_routine(void *arg)
 			sem_post(data->meals_count);
 			pthread_mutex_unlock(&philo->death_lock);
 			unlock_forks(philo);
-			//printf("Fucky waky2\n");
 			break ;
 		}
 		pthread_mutex_unlock(&philo->death_lock);
@@ -53,24 +39,25 @@ void	*philo_routine(void *arg)
 		safe_print(data, philo, "is thinking");
 		usleep(100);
 	}
-	return (NULL);
 }
 
-// void	wait_processes(t_data *data)
-// {
-// 	int		status;
-// 	pid_t	pid;
+void	*philo_routine(void *arg)
+{
+	t_philo		*philo;
+	t_data		*data;
+	pthread_t	monitor_thread;
 
-// 	status = 0;
-// 	pid = waitpid(-1, &status, 0);
-// 	if (pid > 0)
-// 	{
-// 		printf("Fucky waky\n");
-// 		kill_all_philos(data);
-// 	}
-// 	while (waitpid(-1, NULL, 0) > 0)
-// 		;
-// }
+	philo = (t_philo *)arg;
+	data = philo->data;
+	data->start_time = get_time_ms();
+	philo->last_meal = data->start_time;
+	pthread_create(&monitor_thread, NULL, monitor, philo);
+	pthread_detach(monitor_thread);
+	if (philo->id % 2)
+		usleep(100);
+	routine_loop(philo, data);
+	return (NULL);
+}
 
 void	wait_processes(t_data *data)
 {
