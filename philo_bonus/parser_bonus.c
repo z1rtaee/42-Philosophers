@@ -79,8 +79,8 @@ int	parser_bonus(t_data *data, char **argv, int argc)
 		printf(ERROR_INV_ARG);
 		return (0);
 	}
-	if (!init_data(&data, argv) || !init_philos(&data)
-		|| !init_semaphores(&data))
+	if (!init_data(data, argv) || !init_philos(data)
+		|| !init_semaphores(data))
 	{
 		printf(ERROR_INIT);
 		return (0);

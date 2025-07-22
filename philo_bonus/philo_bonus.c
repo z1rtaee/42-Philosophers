@@ -23,6 +23,7 @@ static void	routine_loop(t_philo *philo, t_data *data)
 		safe_print(data, philo, "is eating");
 		pthread_mutex_lock(&philo->death_lock);
 		philo->meals_eaten++;
+		sleep_ms(data->time_to_eat);
 		if (data->max_meals == philo->meals_eaten)
 		{
 			philo->ate = 1;
@@ -32,7 +33,6 @@ static void	routine_loop(t_philo *philo, t_data *data)
 			break ;
 		}
 		pthread_mutex_unlock(&philo->death_lock);
-		sleep_ms(data->time_to_eat);
 		unlock_forks(philo);
 		safe_print(data, philo, "is sleeping");
 		sleep_ms(data->time_to_sleep);
