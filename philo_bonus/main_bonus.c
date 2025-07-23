@@ -29,6 +29,9 @@ int	main(int argc, char **argv)
 	pthread_create(&death_thread, NULL, philo_killer, &data);
 	pthread_detach(death_thread);
 	wait_processes(&data);
+	pthread_mutex_lock(&data.data_lock);
 	free_all(&data);
+	pthread_mutex_unlock(&data.data_lock);
+	pthread_mutex_destroy(&data.data_lock);
 	return (0);
 }

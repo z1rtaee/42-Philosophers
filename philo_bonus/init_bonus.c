@@ -29,6 +29,7 @@ int	init_data(t_data *data, char **argv)
 	data->philo_ids = malloc(sizeof(pid_t) * data->philos_nbr);
 	if (!data->philo_ids)
 		return (0);
+	pthread_mutex_init(&data->data_lock, NULL);
 	return (1);
 }
 
@@ -39,7 +40,6 @@ int	init_philos(t_data *data)
 	i = 0;
 	while (i < data->philos_nbr)
 	{
-		pthread_mutex_init(&data->philos[i].death_lock, NULL);
 		data->philos[i].id = i + 1;
 		data->philos[i].meals_eaten = 0;
 		data->philos[i].last_meal = 0;
@@ -56,10 +56,11 @@ int	init_semaphores(t_data *data)
 	sem_unlink("/print");
 	sem_unlink("/meals_count");
 	sem_unlink("/killer");
-	data->forks = sem_open("/forks", O_CREAT, 0644, data->philos_nbr);
-	data->print = sem_open("/print", O_CREAT, 0644, 1);
-	data->meals_count = sem_open("/meals_count", O_CREAT, 0644, 0);
-	data->killer = sem_open("/killer", O_CREAT, 0644, 0);
+	data->forks = sem_open("/forks", O_CREAT | O_EXCL, S_IWUSR,
+			data->philos_nbr);
+	data->print = sem_open("/print", O_CREAT | O_EXCL, S_IWUSR, 1);
+	data->meals_count = sem_open("/meals_count", O_CREAT | O_EXCL, S_IWUSR, 0);
+	data->killer = sem_open("/killer", O_CREAT | O_EXCL, S_IWUSR, 0);
 	if (data->forks == SEM_FAILED || data->print == SEM_FAILED
 		|| data->meals_count == SEM_FAILED || data->killer == SEM_FAILED)
 		return (0);

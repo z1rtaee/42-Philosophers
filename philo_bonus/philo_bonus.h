@@ -22,6 +22,7 @@
 # include <signal.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <sys/stat.h>
 # include <fcntl.h>
 # include <semaphore.h>
 
@@ -38,7 +39,6 @@ typedef struct s_philo
 	int				meals_eaten;
 	long			last_meal;
 	pid_t			pid;
-	pthread_mutex_t	death_lock;
 	t_data			*data;
 }				t_philo;
 
@@ -56,6 +56,7 @@ typedef struct s_data
 	sem_t			*print;
 	sem_t			*meals_count;
 	sem_t			*killer;
+	pthread_mutex_t	data_lock;
 	t_philo			*philos;
 }				t_data;
 

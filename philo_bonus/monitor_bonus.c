@@ -21,21 +21,21 @@ void	*monitor(void *arg)
 	data = philo->data;
 	while (1)
 	{
-		pthread_mutex_lock(&philo->death_lock);
+		pthread_mutex_lock(&data->data_lock);
 		if (philo->ate)
 		{
-			pthread_mutex_unlock(&philo->death_lock);
+			pthread_mutex_unlock(&data->data_lock);
 			break ;
 		}
 		if (get_time_ms() - philo->last_meal > data->time_to_die)
 		{
-			pthread_mutex_unlock(&philo->death_lock);
+			pthread_mutex_unlock(&data->data_lock);
 			sem_wait(data->print);
 			printf("%ld %d died\n",
 				get_time_ms() - data->start_time, philo->id);
 			return (sem_post(data->killer), NULL);
 		}
-		pthread_mutex_unlock(&philo->death_lock);
+		pthread_mutex_unlock(&data->data_lock);
 		usleep(1000);
 	}
 	return (NULL);
@@ -50,16 +50,20 @@ void	*meal_monitor(void *arg)
 	data = (t_data *)arg;
 	while (i < data->philos_nbr)
 	{
-		pthread_mutex_lock(&data->philos[0].death_lock);
+		pthread_mutex_lock(&data->data_lock);
 		if (data->stop)
 		{
-			pthread_mutex_unlock(&data->philos[0].death_lock);
+			pthread_mutex_unlock(&data->data_lock);
 			return (NULL);
 		}
-		pthread_mutex_unlock(&data->philos[0].death_lock);
+		pthread_mutex_unlock(&data->data_lock);
 		sem_wait(data->meals_count);
 		i++;
 	}
+	pthread_mutex_lock(&data->data_lock);
+	data->stop = 1;
+	pthread_mutex_unlock(&data->data_lock);
+	sem_post(data->killer);
 	sem_wait(data->print);
 	printf("All philosophers have eaten %d times.\n", data->max_meals);
 	sem_post(data->print);
@@ -72,14 +76,22 @@ void	*philo_killer(void *arg)
 
 	data = (t_data *)arg;
 	sem_wait(data->killer);
-	pthread_mutex_lock(&data->philos[0].death_lock);
+	pthread_mutex_lock(&data->data_lock);
+	if (data->stop)
+	{
+		pthread_mutex_unlock(&data->data_lock);
+		return (NULL);
+	}
+	pthread_mutex_unlock(&data->data_lock);
 	if (data->max_meals > 0)
 	{
+		pthread_mutex_lock(&data->data_lock);
 		data->stop = 1;
+		pthread_mutex_unlock(&data->data_lock);
 		sem_post(data->meals_count);
-		pthread_mutex_unlock(&data->philos[0].death_lock);
 	}
-	pthread_mutex_unlock(&data->philos[0].death_lock);
+	pthread_mutex_lock(&data->data_lock);
 	kill_all_philos(data);
+	pthread_mutex_unlock(&data->data_lock);
 	return (NULL);
 }

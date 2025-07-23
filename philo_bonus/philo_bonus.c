@@ -17,22 +17,21 @@ static void	routine_loop(t_philo *philo, t_data *data)
 	while (1)
 	{
 		lock_forks(philo);
-		pthread_mutex_lock(&philo->death_lock);
+		pthread_mutex_lock(&data->data_lock);
 		philo->last_meal = get_time_ms();
-		pthread_mutex_unlock(&philo->death_lock);
 		safe_print(data, philo, "is eating");
-		pthread_mutex_lock(&philo->death_lock);
 		philo->meals_eaten++;
 		sleep_ms(data->time_to_eat);
 		if (data->max_meals == philo->meals_eaten)
 		{
 			philo->ate = 1;
 			sem_post(data->meals_count);
-			pthread_mutex_unlock(&philo->death_lock);
+			pthread_mutex_unlock(&data->data_lock);
 			unlock_forks(philo);
+			usleep(1000);
 			break ;
 		}
-		pthread_mutex_unlock(&philo->death_lock);
+		pthread_mutex_unlock(&data->data_lock);
 		unlock_forks(philo);
 		safe_print(data, philo, "is sleeping");
 		sleep_ms(data->time_to_sleep);
@@ -93,7 +92,10 @@ void	create_processes(t_data *data)
 		else if (data->philo_ids[i] == 0)
 		{
 			philo_routine(&data->philos[i]);
+			pthread_mutex_lock(&data->data_lock);
 			free_all(data);
+			pthread_mutex_unlock(&data->data_lock);
+			pthread_mutex_destroy(&data->data_lock);
 			exit(0);
 		}
 		i++;

@@ -8,7 +8,7 @@ DEFAULT = \e[0m
 NAME			= philo_bonus
 
 CC				= cc
-CFLAGS			= -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS			= -Wall -Wextra -Werror -g #-fsanitize=thread -pthread
 INCLUDE			= -I inc/
 
 ### MINISHELL SRCS ###
